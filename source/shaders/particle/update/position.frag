@@ -7,7 +7,7 @@ uniform int mode;
 uniform float dt, time, decay;
 
 uniform vec3 emitter;
-uniform float radius;
+uniform vec3 boundsMin, boundsMax;
 
 vec3 random_point_on_sphere(vec2 uv) {
     float u = random(uv) * 2.0 - 1.0;
@@ -17,7 +17,17 @@ vec3 random_point_on_sphere(vec2 uv) {
 }
 
 void init(vec2 uv) {
-    gl_FragColor = vec4(emitter + random_point_on_sphere(uv + vec2(dt, time)) * radius, 1);
+    // gl_FragColor = vec4(emitter + random_point_on_sphere(uv + vec2(dt, time)) * radius, 1);
+
+    float x = random(uv);
+    float y = random(uv + 0.333);
+    float z = random(uv + 0.713);
+    gl_FragColor = vec4(
+        mix(boundsMin.x, boundsMax.x, x),
+        mix(boundsMin.y, boundsMax.y, y),
+        mix(boundsMin.z, boundsMax.z, z),
+        1.0
+    );
 }
 
 void update(vec2 uv) {

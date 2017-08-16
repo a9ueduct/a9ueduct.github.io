@@ -6,30 +6,54 @@ const build = (count = 64, size = 1) => {
     let geometry = new THREE.BufferGeometry();
 
     let vertices = [];
-    let uv = [];
+    let uv = [], uv2 = [];
 
     let inv = 1 / count;
     for(let y = 0; y < count; y++) {
         for(let x = 0; x < count; x++) {
             let u = x * inv;
             let v = y * inv;
-            vertices.push(x, y, 0);
+
+            vertices.push(x, y, 0); // lt
             uv.push(u, v);
+            uv2.push(0, 0);
+
+            vertices.push(x + size, y, 0); // rt
+            uv.push(u, v);
+            uv2.push(1, 0);
+
+            vertices.push(x + size, y + size, 0); // rb
+            uv.push(u, v);
+            uv2.push(1, 1);
+
+            vertices.push(x, y + size, 0); // lb
+            uv.push(u, v);
+            uv2.push(0, 1);
         }
     }
 
+    let indices = [];
+    let len = vertices.length / 3;
+    for(let i = 0; i < len; i += 4) {
+        let a = i, b = i + 1, c = i + 2, d = i + 3;
+        indices.push(a, c, b);
+        indices.push(d, c, a);
+    }
+
+	geometry.setIndex(indices);
 	geometry.addAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
 	geometry.addAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+	geometry.addAttribute("uv2", new THREE.Float32BufferAttribute(uv2, 2));
 
     return geometry;
 };
 
-export default class ParticleSystem extends THREE.Points {
+export default class ParticleSystem extends THREE.Mesh {
 
     constructor(renderer, options) {
         options = options || {};
 
-        const count = options.count || 16;
+        const count = options.count || 32;
         const geometry = build(count, 1);
 
         super(
@@ -42,15 +66,18 @@ export default class ParticleSystem extends THREE.Points {
                         texturePosition: { type: "t", value: null },
                         textureVelocity: { type: "t", value: null },
                         textureEnv: { type: "t", value: null },
-                        size: { type: "f", value: 80.0 },
-                        refractionRatio: { type: "f", value: 1.0 },
-                        fresnelBias: { type: "f", value: 0.05 },
-                        fresnelPower: { type: "f", value: 1.8 },
-                        fresnelScale: { type: "f", value: 0.8 },
+                        size: { type: "f", value: 0.5 },
+                        alpha: { type: "f", value: 0.75 },
+                        displacement: { type: "f", value: 0.1 },
+                        refractionRatio: { type: "f", value: 0.85 },
+                        fresnelBias: { type: "f", value: 0.113 },
+                        fresnelPower: { type: "f", value: 2.6 },
+                        fresnelScale: { type: "f", value: 0.68 },
                         resolution: { type: "v4", value: new THREE.Vector4(512, 512, 1/512, 1/512) }
                     },
                     options.uniforms
                 ]),
+                side: THREE.DoubleSide,
                 transparent: true,
                 depthTest: false
                 // blending: THREE.AdditiveBlending
@@ -87,11 +114,14 @@ export default class ParticleSystem extends THREE.Points {
             dt: this.addUniform([this.posVar, this.velVar], "dt", { type:"f", value: 0.0 }),
             time: this.addUniform([this.posVar, this.velVar], "time", { type:"f", value: 0.0 }),
             emitter: this.addUniform([this.posVar], "emitter", { type:"v3", value: new THREE.Vector3(0, 0, 0) }),
-            radius: this.addUniform([this.posVar], "radius", { type:"f", value: 4.0 }),
+            radius: this.addUniform([this.posVar], "radius", { type:"f", value: options.radius || 10.0 }),
+            boundsMin: this.addUniform([this.posVar], "boundsMin", { type:"v3", value: options.boundsMin || new THREE.Vector3(-15, -10, -20) }),
+            boundsMax: this.addUniform([this.posVar], "boundsMax", { type:"v3", value: options.boundsMax || new THREE.Vector3(15, 8, 0) }),
             decay: this.addUniform([this.posVar], "decay", { type:"f", value: 0.1 }),
             point: this.addUniform([this.velVar], "point", { type:"v3", value: new THREE.Vector3(0, 0, 0) }),
             force: this.addUniform([this.velVar], "force", { type:"f", value: 0.0 }),
             speed: this.addUniform([this.velVar], "speed", { type:"f", value: 1.5 }),
+            noise: this.addUniform([this.velVar], "noise", { type:"f", value: 1.0 }),
         };
         this.update(0, 0);
 
@@ -132,4 +162,3 @@ export default class ParticleSystem extends THREE.Points {
     }
 
 }
-

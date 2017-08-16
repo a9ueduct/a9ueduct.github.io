@@ -13,13 +13,11 @@ class App {
                 members: []
             },
             mounted: function() {
-                /*
                 self.request("/json/members.json").then((data) => {
                     this.members = data.map((d) => {
                         return new Member(d);
                     });
                 });
-                */
             }
         });
 

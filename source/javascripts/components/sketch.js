@@ -12,6 +12,7 @@ import "../lib/threejs/controls/TrackballControls";
 import BackgroundPass from "./background";
 import CompositePass from "./composite";
 import ParticleSystem from "./particle";
+import Hypershape from "./hypershape";
 
 export default class Sketch extends THREE.EventDispatcher {
 
@@ -71,39 +72,16 @@ export default class Sketch extends THREE.EventDispatcher {
         let w = window.innerWidth, h = window.innerHeight;
 
         this.camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
-        this.camera.position.set(0, 0, 5.75);
+        this.camera.position.set(0, 0, 10.75);
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
         // let helper = new THREE.CameraHelper(this.camera);
         // this.scene.add(helper);
 
-        let cube = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, 1),
-            new THREE.MeshNormalMaterial({
-                depthTest: false
-            })
-        );
-        cube.scale.set(3, 3, 3);
-        cube.update = (dt, t) => {
-            cube.rotation.set(t * 0.1, t * 0.1, 0);
-        };
-        this.updaters.push(cube);
-
-        this.scene.add(cube);
-
-        // this.camera.lookAt(cube);
-
-        /*
-        let loader = new THREE.CubeTextureLoader();
-        loader.setPath("/textures/skybox/");
-        loader.load([
-            "px.jpg", "nx.jpg",
-            "py.jpg", "ny.jpg",
-            "pz.jpg", "nz.jpg"
-        ], (env) => {
-            // this.material.uniforms.tEnv.value = env;
-        });
-        */
+        let shape = new Hypershape();
+        shape.scale.set(2, 2, 2);
+        this.updaters.push(shape);
+        this.scene.add(shape);
 
         this.overlay = new THREE.Scene();
 
@@ -114,8 +92,9 @@ export default class Sketch extends THREE.EventDispatcher {
         // this.debugTexture(this.system.texturePosition);
 
         const gui = new dat.GUI();
+        gui.add(this.system.material.uniforms.displacement, "value").min(0.0).max(0.5).step(0.01).name("displacement");
         gui.add(this.system.material.uniforms.refractionRatio, "value").min(0.0).max(3.0).name("ratio");
-        gui.add(this.system.material.uniforms.fresnelBias, "value").min(0.0).max(3.0).name("bias");
+        gui.add(this.system.material.uniforms.fresnelBias, "value").min(0.0).max(0.5).name("bias");
         gui.add(this.system.material.uniforms.fresnelPower, "value").min(0.0).max(3.0).name("power");
         gui.add(this.system.material.uniforms.fresnelScale, "value").min(0.0).max(3.0).name("scale");
     }

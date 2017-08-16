@@ -2,11 +2,13 @@
     <canvas id="background"></canvas>
 	<main id="main" class="container">
         <div class="logo">
+            <p>Tokyo based visual performance unit</p>
             <div class="logo-inner">
+                <h1>AQUEDUCT</h1>
             </div>
         </div>
-        <div class="description">
-            <p></p>
+        <div class="works">
+            <iframe src="https://player.vimeo.com/video/205441238" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
         </div>
         <div class="member">
             <h2></h2>
@@ -25,3 +27,4 @@
     <script src="{{ .Site.BaseURL }}javascripts/lib/three.min.js"></script>
     <script src="{{ .Site.BaseURL }}javascripts/main.js"></script>
 {{ template "_internal/google_analytics.html" . }}
+{{ partial "footer.html" . }}

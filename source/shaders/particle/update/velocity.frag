@@ -3,7 +3,7 @@
 #pragma glslify: random = require(glsl-random)
 
 uniform int mode;
-uniform float dt, time, speed;
+uniform float dt, time, speed, noise;
 
 uniform vec3 point;
 uniform float force;
@@ -56,7 +56,7 @@ void update() {
         vec4 vel = texture2D(textureVelocity, uv);
         vel.xyz *= vel.w;
 
-        vel.xyz += speed * dt * (vec3(0, 1, 0) + curlNoise(pos.xyz + vec3(0, time, 0)));
+        vel.xyz += speed * dt * (vec3(0, 1, 0) + noise * curlNoise(pos.xyz + vec3(0, time * 0.25, 0)));
 
         // vec3 dir = pos.xyz - point;
         // float l = length(dir);
