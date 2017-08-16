@@ -2481,7 +2481,7 @@
 	            // this.scene.add(helper);
 
 	            var shape = new _hypershape2.default();
-	            shape.scale.set(2, 2, 2);
+	            shape.scale.set(2.5, 2.5, 2.5);
 	            this.updaters.push(shape);
 	            this.scene.add(shape);
 
@@ -3809,16 +3809,16 @@
 
 	THREE.CopyShader = {
 
-			uniforms: {
+		uniforms: {
 
-					"tDiffuse": { value: null },
-					"opacity": { value: 1.0 }
+			"tDiffuse": { value: null },
+			"opacity": { value: 1.0 }
 
-			},
+		},
 
-			vertexShader: ["varying vec2 vUv;", "void main() {", "vUv = uv;", "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );", "}"].join("\n"),
+		vertexShader: ["varying vec2 vUv;", "void main() {", "vUv = uv;", "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );", "}"].join("\n"),
 
-			fragmentShader: ["uniform float opacity;", "uniform sampler2D tDiffuse;", "varying vec2 vUv;", "void main() {", "vec4 texel = texture2D( tDiffuse, vUv );", "gl_FragColor = opacity * texel;", "}"].join("\n")
+		fragmentShader: ["uniform float opacity;", "uniform sampler2D tDiffuse;", "varying vec2 vUv;", "void main() {", "vec4 texel = texture2D( tDiffuse, vUv );", "gl_FragColor = opacity * texel;", "}"].join("\n")
 
 	};
 
@@ -3834,57 +3834,57 @@
 
 	THREE.RenderPass = function (scene, camera, overrideMaterial, clearColor, clearAlpha) {
 
-			THREE.Pass.call(this);
+		THREE.Pass.call(this);
 
-			this.scene = scene;
-			this.camera = camera;
+		this.scene = scene;
+		this.camera = camera;
 
-			this.overrideMaterial = overrideMaterial;
+		this.overrideMaterial = overrideMaterial;
 
-			this.clearColor = clearColor;
-			this.clearAlpha = clearAlpha !== undefined ? clearAlpha : 0;
+		this.clearColor = clearColor;
+		this.clearAlpha = clearAlpha !== undefined ? clearAlpha : 0;
 
-			this.clear = true;
-			this.clearDepth = false;
-			this.needsSwap = false;
+		this.clear = true;
+		this.clearDepth = false;
+		this.needsSwap = false;
 	};
 
 	THREE.RenderPass.prototype = Object.assign(Object.create(THREE.Pass.prototype), {
 
-			constructor: THREE.RenderPass,
+		constructor: THREE.RenderPass,
 
-			render: function render(renderer, writeBuffer, readBuffer, delta, maskActive) {
+		render: function render(renderer, writeBuffer, readBuffer, delta, maskActive) {
 
-					var oldAutoClear = renderer.autoClear;
-					renderer.autoClear = false;
+			var oldAutoClear = renderer.autoClear;
+			renderer.autoClear = false;
 
-					this.scene.overrideMaterial = this.overrideMaterial;
+			this.scene.overrideMaterial = this.overrideMaterial;
 
-					var oldClearColor, oldClearAlpha;
+			var oldClearColor, oldClearAlpha;
 
-					if (this.clearColor) {
+			if (this.clearColor) {
 
-							oldClearColor = renderer.getClearColor().getHex();
-							oldClearAlpha = renderer.getClearAlpha();
+				oldClearColor = renderer.getClearColor().getHex();
+				oldClearAlpha = renderer.getClearAlpha();
 
-							renderer.setClearColor(this.clearColor, this.clearAlpha);
-					}
-
-					if (this.clearDepth) {
-
-							renderer.clearDepth();
-					}
-
-					renderer.render(this.scene, this.camera, this.renderToScreen ? null : readBuffer, this.clear);
-
-					if (this.clearColor) {
-
-							renderer.setClearColor(oldClearColor, oldClearAlpha);
-					}
-
-					this.scene.overrideMaterial = null;
-					renderer.autoClear = oldAutoClear;
+				renderer.setClearColor(this.clearColor, this.clearAlpha);
 			}
+
+			if (this.clearDepth) {
+
+				renderer.clearDepth();
+			}
+
+			renderer.render(this.scene, this.camera, this.renderToScreen ? null : readBuffer, this.clear);
+
+			if (this.clearColor) {
+
+				renderer.setClearColor(oldClearColor, oldClearAlpha);
+			}
+
+			this.scene.overrideMaterial = null;
+			renderer.autoClear = oldAutoClear;
+		}
 
 	});
 
@@ -4033,88 +4033,88 @@
 
 	THREE.MaskPass = function (scene, camera) {
 
-			THREE.Pass.call(this);
+		THREE.Pass.call(this);
 
-			this.scene = scene;
-			this.camera = camera;
+		this.scene = scene;
+		this.camera = camera;
 
-			this.clear = true;
-			this.needsSwap = false;
+		this.clear = true;
+		this.needsSwap = false;
 
-			this.inverse = false;
+		this.inverse = false;
 	};
 
 	THREE.MaskPass.prototype = Object.assign(Object.create(THREE.Pass.prototype), {
 
-			constructor: THREE.MaskPass,
+		constructor: THREE.MaskPass,
 
-			render: function render(renderer, writeBuffer, readBuffer, delta, maskActive) {
+		render: function render(renderer, writeBuffer, readBuffer, delta, maskActive) {
 
-					var context = renderer.context;
-					var state = renderer.state;
+			var context = renderer.context;
+			var state = renderer.state;
 
-					// don't update color or depth
+			// don't update color or depth
 
-					state.buffers.color.setMask(false);
-					state.buffers.depth.setMask(false);
+			state.buffers.color.setMask(false);
+			state.buffers.depth.setMask(false);
 
-					// lock buffers
+			// lock buffers
 
-					state.buffers.color.setLocked(true);
-					state.buffers.depth.setLocked(true);
+			state.buffers.color.setLocked(true);
+			state.buffers.depth.setLocked(true);
 
-					// set up stencil
+			// set up stencil
 
-					var writeValue, clearValue;
+			var writeValue, clearValue;
 
-					if (this.inverse) {
+			if (this.inverse) {
 
-							writeValue = 0;
-							clearValue = 1;
-					} else {
+				writeValue = 0;
+				clearValue = 1;
+			} else {
 
-							writeValue = 1;
-							clearValue = 0;
-					}
-
-					state.buffers.stencil.setTest(true);
-					state.buffers.stencil.setOp(context.REPLACE, context.REPLACE, context.REPLACE);
-					state.buffers.stencil.setFunc(context.ALWAYS, writeValue, 0xffffffff);
-					state.buffers.stencil.setClear(clearValue);
-
-					// draw into the stencil buffer
-
-					renderer.render(this.scene, this.camera, readBuffer, this.clear);
-					renderer.render(this.scene, this.camera, writeBuffer, this.clear);
-
-					// unlock color and depth buffer for subsequent rendering
-
-					state.buffers.color.setLocked(false);
-					state.buffers.depth.setLocked(false);
-
-					// only render where stencil is set to 1
-
-					state.buffers.stencil.setFunc(context.EQUAL, 1, 0xffffffff); // draw if == 1
-					state.buffers.stencil.setOp(context.KEEP, context.KEEP, context.KEEP);
+				writeValue = 1;
+				clearValue = 0;
 			}
+
+			state.buffers.stencil.setTest(true);
+			state.buffers.stencil.setOp(context.REPLACE, context.REPLACE, context.REPLACE);
+			state.buffers.stencil.setFunc(context.ALWAYS, writeValue, 0xffffffff);
+			state.buffers.stencil.setClear(clearValue);
+
+			// draw into the stencil buffer
+
+			renderer.render(this.scene, this.camera, readBuffer, this.clear);
+			renderer.render(this.scene, this.camera, writeBuffer, this.clear);
+
+			// unlock color and depth buffer for subsequent rendering
+
+			state.buffers.color.setLocked(false);
+			state.buffers.depth.setLocked(false);
+
+			// only render where stencil is set to 1
+
+			state.buffers.stencil.setFunc(context.EQUAL, 1, 0xffffffff); // draw if == 1
+			state.buffers.stencil.setOp(context.KEEP, context.KEEP, context.KEEP);
+		}
 
 	});
 
 	THREE.ClearMaskPass = function () {
 
-			THREE.Pass.call(this);
+		THREE.Pass.call(this);
 
-			this.needsSwap = false;
+		this.needsSwap = false;
 	};
 
 	THREE.ClearMaskPass.prototype = Object.create(THREE.Pass.prototype);
 
 	Object.assign(THREE.ClearMaskPass.prototype, {
 
-			render: function render(renderer, writeBuffer, readBuffer, delta, maskActive) {
+		render: function render(renderer, writeBuffer, readBuffer, delta, maskActive) {
 
-					renderer.state.buffers.stencil.setTest(false);
-			}
+			renderer.state.buffers.stencil.setTest(false);
+		}
 
 	});
 
@@ -4133,550 +4133,550 @@
 
 	THREE.TrackballControls = function (object, domElement) {
 
-			var _this = this;
-			var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
+		var _this = this;
+		var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
 
-			this.object = object;
-			this.domElement = domElement !== undefined ? domElement : document;
+		this.object = object;
+		this.domElement = domElement !== undefined ? domElement : document;
 
-			// API
+		// API
 
-			this.enabled = true;
+		this.enabled = true;
 
-			this.screen = { left: 0, top: 0, width: 0, height: 0 };
+		this.screen = { left: 0, top: 0, width: 0, height: 0 };
 
-			this.rotateSpeed = 1.0;
-			this.zoomSpeed = 1.2;
-			this.panSpeed = 0.3;
+		this.rotateSpeed = 1.0;
+		this.zoomSpeed = 1.2;
+		this.panSpeed = 0.3;
 
-			this.noRotate = false;
-			this.noZoom = false;
-			this.noPan = false;
+		this.noRotate = false;
+		this.noZoom = false;
+		this.noPan = false;
 
-			this.staticMoving = false;
-			this.dynamicDampingFactor = 0.2;
+		this.staticMoving = false;
+		this.dynamicDampingFactor = 0.2;
 
-			this.minDistance = 0;
-			this.maxDistance = Infinity;
+		this.minDistance = 0;
+		this.maxDistance = Infinity;
 
-			this.keys = [65 /*A*/, 83 /*S*/, 68 /*D*/];
+		this.keys = [65 /*A*/, 83 /*S*/, 68 /*D*/];
 
-			// internals
+		// internals
 
-			this.target = new THREE.Vector3();
+		this.target = new THREE.Vector3();
 
-			var EPS = 0.000001;
+		var EPS = 0.000001;
 
-			var lastPosition = new THREE.Vector3();
+		var lastPosition = new THREE.Vector3();
 
-			var _state = STATE.NONE,
-			    _prevState = STATE.NONE,
-			    _eye = new THREE.Vector3(),
-			    _movePrev = new THREE.Vector2(),
-			    _moveCurr = new THREE.Vector2(),
-			    _lastAxis = new THREE.Vector3(),
-			    _lastAngle = 0,
-			    _zoomStart = new THREE.Vector2(),
-			    _zoomEnd = new THREE.Vector2(),
-			    _touchZoomDistanceStart = 0,
-			    _touchZoomDistanceEnd = 0,
-			    _panStart = new THREE.Vector2(),
-			    _panEnd = new THREE.Vector2();
+		var _state = STATE.NONE,
+		    _prevState = STATE.NONE,
+		    _eye = new THREE.Vector3(),
+		    _movePrev = new THREE.Vector2(),
+		    _moveCurr = new THREE.Vector2(),
+		    _lastAxis = new THREE.Vector3(),
+		    _lastAngle = 0,
+		    _zoomStart = new THREE.Vector2(),
+		    _zoomEnd = new THREE.Vector2(),
+		    _touchZoomDistanceStart = 0,
+		    _touchZoomDistanceEnd = 0,
+		    _panStart = new THREE.Vector2(),
+		    _panEnd = new THREE.Vector2();
 
-			// for reset
+		// for reset
 
-			this.target0 = this.target.clone();
-			this.position0 = this.object.position.clone();
-			this.up0 = this.object.up.clone();
+		this.target0 = this.target.clone();
+		this.position0 = this.object.position.clone();
+		this.up0 = this.object.up.clone();
 
-			// events
+		// events
 
-			var changeEvent = { type: 'change' };
-			var startEvent = { type: 'start' };
-			var endEvent = { type: 'end' };
+		var changeEvent = { type: 'change' };
+		var startEvent = { type: 'start' };
+		var endEvent = { type: 'end' };
 
-			// methods
+		// methods
 
-			this.handleResize = function () {
+		this.handleResize = function () {
 
-					if (this.domElement === document) {
+			if (this.domElement === document) {
 
-							this.screen.left = 0;
-							this.screen.top = 0;
-							this.screen.width = window.innerWidth;
-							this.screen.height = window.innerHeight;
+				this.screen.left = 0;
+				this.screen.top = 0;
+				this.screen.width = window.innerWidth;
+				this.screen.height = window.innerHeight;
+			} else {
+
+				var box = this.domElement.getBoundingClientRect();
+				// adjustments come from similar code in the jquery offset() function
+				var d = this.domElement.ownerDocument.documentElement;
+				this.screen.left = box.left + window.pageXOffset - d.clientLeft;
+				this.screen.top = box.top + window.pageYOffset - d.clientTop;
+				this.screen.width = box.width;
+				this.screen.height = box.height;
+			}
+		};
+
+		this.handleEvent = function (event) {
+
+			if (typeof this[event.type] == 'function') {
+
+				this[event.type](event);
+			}
+		};
+
+		var getMouseOnScreen = function () {
+
+			var vector = new THREE.Vector2();
+
+			return function getMouseOnScreen(pageX, pageY) {
+
+				vector.set((pageX - _this.screen.left) / _this.screen.width, (pageY - _this.screen.top) / _this.screen.height);
+
+				return vector;
+			};
+		}();
+
+		var getMouseOnCircle = function () {
+
+			var vector = new THREE.Vector2();
+
+			return function getMouseOnCircle(pageX, pageY) {
+
+				vector.set((pageX - _this.screen.width * 0.5 - _this.screen.left) / (_this.screen.width * 0.5), (_this.screen.height + 2 * (_this.screen.top - pageY)) / _this.screen.width // screen.width intentional
+				);
+
+				return vector;
+			};
+		}();
+
+		this.rotateCamera = function () {
+
+			var axis = new THREE.Vector3(),
+			    quaternion = new THREE.Quaternion(),
+			    eyeDirection = new THREE.Vector3(),
+			    objectUpDirection = new THREE.Vector3(),
+			    objectSidewaysDirection = new THREE.Vector3(),
+			    moveDirection = new THREE.Vector3(),
+			    angle;
+
+			return function rotateCamera() {
+
+				moveDirection.set(_moveCurr.x - _movePrev.x, _moveCurr.y - _movePrev.y, 0);
+				angle = moveDirection.length();
+
+				if (angle) {
+
+					_eye.copy(_this.object.position).sub(_this.target);
+
+					eyeDirection.copy(_eye).normalize();
+					objectUpDirection.copy(_this.object.up).normalize();
+					objectSidewaysDirection.crossVectors(objectUpDirection, eyeDirection).normalize();
+
+					objectUpDirection.setLength(_moveCurr.y - _movePrev.y);
+					objectSidewaysDirection.setLength(_moveCurr.x - _movePrev.x);
+
+					moveDirection.copy(objectUpDirection.add(objectSidewaysDirection));
+
+					axis.crossVectors(moveDirection, _eye).normalize();
+
+					angle *= _this.rotateSpeed;
+					quaternion.setFromAxisAngle(axis, angle);
+
+					_eye.applyQuaternion(quaternion);
+					_this.object.up.applyQuaternion(quaternion);
+
+					_lastAxis.copy(axis);
+					_lastAngle = angle;
+				} else if (!_this.staticMoving && _lastAngle) {
+
+					_lastAngle *= Math.sqrt(1.0 - _this.dynamicDampingFactor);
+					_eye.copy(_this.object.position).sub(_this.target);
+					quaternion.setFromAxisAngle(_lastAxis, _lastAngle);
+					_eye.applyQuaternion(quaternion);
+					_this.object.up.applyQuaternion(quaternion);
+				}
+
+				_movePrev.copy(_moveCurr);
+			};
+		}();
+
+		this.zoomCamera = function () {
+
+			var factor;
+
+			if (_state === STATE.TOUCH_ZOOM_PAN) {
+
+				factor = _touchZoomDistanceStart / _touchZoomDistanceEnd;
+				_touchZoomDistanceStart = _touchZoomDistanceEnd;
+				_eye.multiplyScalar(factor);
+			} else {
+
+				factor = 1.0 + (_zoomEnd.y - _zoomStart.y) * _this.zoomSpeed;
+
+				if (factor !== 1.0 && factor > 0.0) {
+
+					_eye.multiplyScalar(factor);
+				}
+
+				if (_this.staticMoving) {
+
+					_zoomStart.copy(_zoomEnd);
+				} else {
+
+					_zoomStart.y += (_zoomEnd.y - _zoomStart.y) * this.dynamicDampingFactor;
+				}
+			}
+		};
+
+		this.panCamera = function () {
+
+			var mouseChange = new THREE.Vector2(),
+			    objectUp = new THREE.Vector3(),
+			    pan = new THREE.Vector3();
+
+			return function panCamera() {
+
+				mouseChange.copy(_panEnd).sub(_panStart);
+
+				if (mouseChange.lengthSq()) {
+
+					mouseChange.multiplyScalar(_eye.length() * _this.panSpeed);
+
+					pan.copy(_eye).cross(_this.object.up).setLength(mouseChange.x);
+					pan.add(objectUp.copy(_this.object.up).setLength(mouseChange.y));
+
+					_this.object.position.add(pan);
+					_this.target.add(pan);
+
+					if (_this.staticMoving) {
+
+						_panStart.copy(_panEnd);
 					} else {
 
-							var box = this.domElement.getBoundingClientRect();
-							// adjustments come from similar code in the jquery offset() function
-							var d = this.domElement.ownerDocument.documentElement;
-							this.screen.left = box.left + window.pageXOffset - d.clientLeft;
-							this.screen.top = box.top + window.pageYOffset - d.clientTop;
-							this.screen.width = box.width;
-							this.screen.height = box.height;
+						_panStart.add(mouseChange.subVectors(_panEnd, _panStart).multiplyScalar(_this.dynamicDampingFactor));
 					}
+				}
 			};
+		}();
 
-			this.handleEvent = function (event) {
+		this.checkDistances = function () {
 
-					if (typeof this[event.type] == 'function') {
+			if (!_this.noZoom || !_this.noPan) {
 
-							this[event.type](event);
-					}
-			};
+				if (_eye.lengthSq() > _this.maxDistance * _this.maxDistance) {
 
-			var getMouseOnScreen = function () {
+					_this.object.position.addVectors(_this.target, _eye.setLength(_this.maxDistance));
+					_zoomStart.copy(_zoomEnd);
+				}
 
-					var vector = new THREE.Vector2();
+				if (_eye.lengthSq() < _this.minDistance * _this.minDistance) {
 
-					return function getMouseOnScreen(pageX, pageY) {
+					_this.object.position.addVectors(_this.target, _eye.setLength(_this.minDistance));
+					_zoomStart.copy(_zoomEnd);
+				}
+			}
+		};
 
-							vector.set((pageX - _this.screen.left) / _this.screen.width, (pageY - _this.screen.top) / _this.screen.height);
+		this.update = function () {
 
-							return vector;
-					};
-			}();
+			_eye.subVectors(_this.object.position, _this.target);
 
-			var getMouseOnCircle = function () {
+			if (!_this.noRotate) {
 
-					var vector = new THREE.Vector2();
-
-					return function getMouseOnCircle(pageX, pageY) {
-
-							vector.set((pageX - _this.screen.width * 0.5 - _this.screen.left) / (_this.screen.width * 0.5), (_this.screen.height + 2 * (_this.screen.top - pageY)) / _this.screen.width // screen.width intentional
-							);
-
-							return vector;
-					};
-			}();
-
-			this.rotateCamera = function () {
-
-					var axis = new THREE.Vector3(),
-					    quaternion = new THREE.Quaternion(),
-					    eyeDirection = new THREE.Vector3(),
-					    objectUpDirection = new THREE.Vector3(),
-					    objectSidewaysDirection = new THREE.Vector3(),
-					    moveDirection = new THREE.Vector3(),
-					    angle;
-
-					return function rotateCamera() {
-
-							moveDirection.set(_moveCurr.x - _movePrev.x, _moveCurr.y - _movePrev.y, 0);
-							angle = moveDirection.length();
-
-							if (angle) {
-
-									_eye.copy(_this.object.position).sub(_this.target);
-
-									eyeDirection.copy(_eye).normalize();
-									objectUpDirection.copy(_this.object.up).normalize();
-									objectSidewaysDirection.crossVectors(objectUpDirection, eyeDirection).normalize();
-
-									objectUpDirection.setLength(_moveCurr.y - _movePrev.y);
-									objectSidewaysDirection.setLength(_moveCurr.x - _movePrev.x);
-
-									moveDirection.copy(objectUpDirection.add(objectSidewaysDirection));
-
-									axis.crossVectors(moveDirection, _eye).normalize();
-
-									angle *= _this.rotateSpeed;
-									quaternion.setFromAxisAngle(axis, angle);
-
-									_eye.applyQuaternion(quaternion);
-									_this.object.up.applyQuaternion(quaternion);
-
-									_lastAxis.copy(axis);
-									_lastAngle = angle;
-							} else if (!_this.staticMoving && _lastAngle) {
-
-									_lastAngle *= Math.sqrt(1.0 - _this.dynamicDampingFactor);
-									_eye.copy(_this.object.position).sub(_this.target);
-									quaternion.setFromAxisAngle(_lastAxis, _lastAngle);
-									_eye.applyQuaternion(quaternion);
-									_this.object.up.applyQuaternion(quaternion);
-							}
-
-							_movePrev.copy(_moveCurr);
-					};
-			}();
-
-			this.zoomCamera = function () {
-
-					var factor;
-
-					if (_state === STATE.TOUCH_ZOOM_PAN) {
-
-							factor = _touchZoomDistanceStart / _touchZoomDistanceEnd;
-							_touchZoomDistanceStart = _touchZoomDistanceEnd;
-							_eye.multiplyScalar(factor);
-					} else {
-
-							factor = 1.0 + (_zoomEnd.y - _zoomStart.y) * _this.zoomSpeed;
-
-							if (factor !== 1.0 && factor > 0.0) {
-
-									_eye.multiplyScalar(factor);
-							}
-
-							if (_this.staticMoving) {
-
-									_zoomStart.copy(_zoomEnd);
-							} else {
-
-									_zoomStart.y += (_zoomEnd.y - _zoomStart.y) * this.dynamicDampingFactor;
-							}
-					}
-			};
-
-			this.panCamera = function () {
-
-					var mouseChange = new THREE.Vector2(),
-					    objectUp = new THREE.Vector3(),
-					    pan = new THREE.Vector3();
-
-					return function panCamera() {
-
-							mouseChange.copy(_panEnd).sub(_panStart);
-
-							if (mouseChange.lengthSq()) {
-
-									mouseChange.multiplyScalar(_eye.length() * _this.panSpeed);
-
-									pan.copy(_eye).cross(_this.object.up).setLength(mouseChange.x);
-									pan.add(objectUp.copy(_this.object.up).setLength(mouseChange.y));
-
-									_this.object.position.add(pan);
-									_this.target.add(pan);
-
-									if (_this.staticMoving) {
-
-											_panStart.copy(_panEnd);
-									} else {
-
-											_panStart.add(mouseChange.subVectors(_panEnd, _panStart).multiplyScalar(_this.dynamicDampingFactor));
-									}
-							}
-					};
-			}();
-
-			this.checkDistances = function () {
-
-					if (!_this.noZoom || !_this.noPan) {
-
-							if (_eye.lengthSq() > _this.maxDistance * _this.maxDistance) {
-
-									_this.object.position.addVectors(_this.target, _eye.setLength(_this.maxDistance));
-									_zoomStart.copy(_zoomEnd);
-							}
-
-							if (_eye.lengthSq() < _this.minDistance * _this.minDistance) {
-
-									_this.object.position.addVectors(_this.target, _eye.setLength(_this.minDistance));
-									_zoomStart.copy(_zoomEnd);
-							}
-					}
-			};
-
-			this.update = function () {
-
-					_eye.subVectors(_this.object.position, _this.target);
-
-					if (!_this.noRotate) {
-
-							_this.rotateCamera();
-					}
-
-					if (!_this.noZoom) {
-
-							_this.zoomCamera();
-					}
-
-					if (!_this.noPan) {
-
-							_this.panCamera();
-					}
-
-					_this.object.position.addVectors(_this.target, _eye);
-
-					_this.checkDistances();
-
-					_this.object.lookAt(_this.target);
-
-					if (lastPosition.distanceToSquared(_this.object.position) > EPS) {
-
-							_this.dispatchEvent(changeEvent);
-
-							lastPosition.copy(_this.object.position);
-					}
-			};
-
-			this.reset = function () {
-
-					_state = STATE.NONE;
-					_prevState = STATE.NONE;
-
-					_this.target.copy(_this.target0);
-					_this.object.position.copy(_this.position0);
-					_this.object.up.copy(_this.up0);
-
-					_eye.subVectors(_this.object.position, _this.target);
-
-					_this.object.lookAt(_this.target);
-
-					_this.dispatchEvent(changeEvent);
-
-					lastPosition.copy(_this.object.position);
-			};
-
-			// listeners
-
-			function keydown(event) {
-
-					if (_this.enabled === false) return;
-
-					window.removeEventListener('keydown', keydown);
-
-					_prevState = _state;
-
-					if (_state !== STATE.NONE) {
-
-							return;
-					} else if (event.keyCode === _this.keys[STATE.ROTATE] && !_this.noRotate) {
-
-							_state = STATE.ROTATE;
-					} else if (event.keyCode === _this.keys[STATE.ZOOM] && !_this.noZoom) {
-
-							_state = STATE.ZOOM;
-					} else if (event.keyCode === _this.keys[STATE.PAN] && !_this.noPan) {
-
-							_state = STATE.PAN;
-					}
+				_this.rotateCamera();
 			}
 
-			function keyup(event) {
+			if (!_this.noZoom) {
 
-					if (_this.enabled === false) return;
-
-					_state = _prevState;
-
-					window.addEventListener('keydown', keydown, false);
+				_this.zoomCamera();
 			}
 
-			function mousedown(event) {
+			if (!_this.noPan) {
 
-					if (_this.enabled === false) return;
-
-					event.preventDefault();
-					event.stopPropagation();
-
-					if (_state === STATE.NONE) {
-
-							_state = event.button;
-					}
-
-					if (_state === STATE.ROTATE && !_this.noRotate) {
-
-							_moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY));
-							_movePrev.copy(_moveCurr);
-					} else if (_state === STATE.ZOOM && !_this.noZoom) {
-
-							_zoomStart.copy(getMouseOnScreen(event.pageX, event.pageY));
-							_zoomEnd.copy(_zoomStart);
-					} else if (_state === STATE.PAN && !_this.noPan) {
-
-							_panStart.copy(getMouseOnScreen(event.pageX, event.pageY));
-							_panEnd.copy(_panStart);
-					}
-
-					document.addEventListener('mousemove', mousemove, false);
-					document.addEventListener('mouseup', mouseup, false);
-
-					_this.dispatchEvent(startEvent);
+				_this.panCamera();
 			}
 
-			function mousemove(event) {
+			_this.object.position.addVectors(_this.target, _eye);
 
-					if (_this.enabled === false) return;
+			_this.checkDistances();
 
-					event.preventDefault();
-					event.stopPropagation();
+			_this.object.lookAt(_this.target);
 
-					if (_state === STATE.ROTATE && !_this.noRotate) {
+			if (lastPosition.distanceToSquared(_this.object.position) > EPS) {
 
-							_movePrev.copy(_moveCurr);
-							_moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY));
-					} else if (_state === STATE.ZOOM && !_this.noZoom) {
+				_this.dispatchEvent(changeEvent);
 
-							_zoomEnd.copy(getMouseOnScreen(event.pageX, event.pageY));
-					} else if (_state === STATE.PAN && !_this.noPan) {
-
-							_panEnd.copy(getMouseOnScreen(event.pageX, event.pageY));
-					}
+				lastPosition.copy(_this.object.position);
 			}
+		};
 
-			function mouseup(event) {
+		this.reset = function () {
 
-					if (_this.enabled === false) return;
+			_state = STATE.NONE;
+			_prevState = STATE.NONE;
 
-					event.preventDefault();
-					event.stopPropagation();
+			_this.target.copy(_this.target0);
+			_this.object.position.copy(_this.position0);
+			_this.object.up.copy(_this.up0);
 
-					_state = STATE.NONE;
+			_eye.subVectors(_this.object.position, _this.target);
 
-					document.removeEventListener('mousemove', mousemove);
-					document.removeEventListener('mouseup', mouseup);
-					_this.dispatchEvent(endEvent);
+			_this.object.lookAt(_this.target);
+
+			_this.dispatchEvent(changeEvent);
+
+			lastPosition.copy(_this.object.position);
+		};
+
+		// listeners
+
+		function keydown(event) {
+
+			if (_this.enabled === false) return;
+
+			window.removeEventListener('keydown', keydown);
+
+			_prevState = _state;
+
+			if (_state !== STATE.NONE) {
+
+				return;
+			} else if (event.keyCode === _this.keys[STATE.ROTATE] && !_this.noRotate) {
+
+				_state = STATE.ROTATE;
+			} else if (event.keyCode === _this.keys[STATE.ZOOM] && !_this.noZoom) {
+
+				_state = STATE.ZOOM;
+			} else if (event.keyCode === _this.keys[STATE.PAN] && !_this.noPan) {
+
+				_state = STATE.PAN;
 			}
+		}
 
-			function mousewheel(event) {
+		function keyup(event) {
 
-					if (_this.enabled === false) return;
+			if (_this.enabled === false) return;
 
-					event.preventDefault();
-					event.stopPropagation();
-
-					switch (event.deltaMode) {
-
-							case 2:
-									// Zoom in pages
-									_zoomStart.y -= event.deltaY * 0.025;
-									break;
-
-							case 1:
-									// Zoom in lines
-									_zoomStart.y -= event.deltaY * 0.01;
-									break;
-
-							default:
-									// undefined, 0, assume pixels
-									_zoomStart.y -= event.deltaY * 0.00025;
-									break;
-
-					}
-
-					_this.dispatchEvent(startEvent);
-					_this.dispatchEvent(endEvent);
-			}
-
-			function touchstart(event) {
-
-					if (_this.enabled === false) return;
-
-					switch (event.touches.length) {
-
-							case 1:
-									_state = STATE.TOUCH_ROTATE;
-									_moveCurr.copy(getMouseOnCircle(event.touches[0].pageX, event.touches[0].pageY));
-									_movePrev.copy(_moveCurr);
-									break;
-
-							default:
-									// 2 or more
-									_state = STATE.TOUCH_ZOOM_PAN;
-									var dx = event.touches[0].pageX - event.touches[1].pageX;
-									var dy = event.touches[0].pageY - event.touches[1].pageY;
-									_touchZoomDistanceEnd = _touchZoomDistanceStart = Math.sqrt(dx * dx + dy * dy);
-
-									var x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
-									var y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
-									_panStart.copy(getMouseOnScreen(x, y));
-									_panEnd.copy(_panStart);
-									break;
-
-					}
-
-					_this.dispatchEvent(startEvent);
-			}
-
-			function touchmove(event) {
-
-					if (_this.enabled === false) return;
-
-					event.preventDefault();
-					event.stopPropagation();
-
-					switch (event.touches.length) {
-
-							case 1:
-									_movePrev.copy(_moveCurr);
-									_moveCurr.copy(getMouseOnCircle(event.touches[0].pageX, event.touches[0].pageY));
-									break;
-
-							default:
-									// 2 or more
-									var dx = event.touches[0].pageX - event.touches[1].pageX;
-									var dy = event.touches[0].pageY - event.touches[1].pageY;
-									_touchZoomDistanceEnd = Math.sqrt(dx * dx + dy * dy);
-
-									var x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
-									var y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
-									_panEnd.copy(getMouseOnScreen(x, y));
-									break;
-
-					}
-			}
-
-			function touchend(event) {
-
-					if (_this.enabled === false) return;
-
-					switch (event.touches.length) {
-
-							case 0:
-									_state = STATE.NONE;
-									break;
-
-							case 1:
-									_state = STATE.TOUCH_ROTATE;
-									_moveCurr.copy(getMouseOnCircle(event.touches[0].pageX, event.touches[0].pageY));
-									_movePrev.copy(_moveCurr);
-									break;
-
-					}
-
-					_this.dispatchEvent(endEvent);
-			}
-
-			function contextmenu(event) {
-
-					if (_this.enabled === false) return;
-
-					event.preventDefault();
-			}
-
-			this.dispose = function () {
-
-					this.domElement.removeEventListener('contextmenu', contextmenu, false);
-					this.domElement.removeEventListener('mousedown', mousedown, false);
-					this.domElement.removeEventListener('wheel', mousewheel, false);
-
-					this.domElement.removeEventListener('touchstart', touchstart, false);
-					this.domElement.removeEventListener('touchend', touchend, false);
-					this.domElement.removeEventListener('touchmove', touchmove, false);
-
-					document.removeEventListener('mousemove', mousemove, false);
-					document.removeEventListener('mouseup', mouseup, false);
-
-					window.removeEventListener('keydown', keydown, false);
-					window.removeEventListener('keyup', keyup, false);
-			};
-
-			this.domElement.addEventListener('contextmenu', contextmenu, false);
-			this.domElement.addEventListener('mousedown', mousedown, false);
-			this.domElement.addEventListener('wheel', mousewheel, false);
-
-			this.domElement.addEventListener('touchstart', touchstart, false);
-			this.domElement.addEventListener('touchend', touchend, false);
-			this.domElement.addEventListener('touchmove', touchmove, false);
+			_state = _prevState;
 
 			window.addEventListener('keydown', keydown, false);
-			window.addEventListener('keyup', keyup, false);
+		}
 
-			this.handleResize();
+		function mousedown(event) {
 
-			// force an update at start
-			this.update();
+			if (_this.enabled === false) return;
+
+			event.preventDefault();
+			event.stopPropagation();
+
+			if (_state === STATE.NONE) {
+
+				_state = event.button;
+			}
+
+			if (_state === STATE.ROTATE && !_this.noRotate) {
+
+				_moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY));
+				_movePrev.copy(_moveCurr);
+			} else if (_state === STATE.ZOOM && !_this.noZoom) {
+
+				_zoomStart.copy(getMouseOnScreen(event.pageX, event.pageY));
+				_zoomEnd.copy(_zoomStart);
+			} else if (_state === STATE.PAN && !_this.noPan) {
+
+				_panStart.copy(getMouseOnScreen(event.pageX, event.pageY));
+				_panEnd.copy(_panStart);
+			}
+
+			document.addEventListener('mousemove', mousemove, false);
+			document.addEventListener('mouseup', mouseup, false);
+
+			_this.dispatchEvent(startEvent);
+		}
+
+		function mousemove(event) {
+
+			if (_this.enabled === false) return;
+
+			event.preventDefault();
+			event.stopPropagation();
+
+			if (_state === STATE.ROTATE && !_this.noRotate) {
+
+				_movePrev.copy(_moveCurr);
+				_moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY));
+			} else if (_state === STATE.ZOOM && !_this.noZoom) {
+
+				_zoomEnd.copy(getMouseOnScreen(event.pageX, event.pageY));
+			} else if (_state === STATE.PAN && !_this.noPan) {
+
+				_panEnd.copy(getMouseOnScreen(event.pageX, event.pageY));
+			}
+		}
+
+		function mouseup(event) {
+
+			if (_this.enabled === false) return;
+
+			event.preventDefault();
+			event.stopPropagation();
+
+			_state = STATE.NONE;
+
+			document.removeEventListener('mousemove', mousemove);
+			document.removeEventListener('mouseup', mouseup);
+			_this.dispatchEvent(endEvent);
+		}
+
+		function mousewheel(event) {
+
+			if (_this.enabled === false) return;
+
+			event.preventDefault();
+			event.stopPropagation();
+
+			switch (event.deltaMode) {
+
+				case 2:
+					// Zoom in pages
+					_zoomStart.y -= event.deltaY * 0.025;
+					break;
+
+				case 1:
+					// Zoom in lines
+					_zoomStart.y -= event.deltaY * 0.01;
+					break;
+
+				default:
+					// undefined, 0, assume pixels
+					_zoomStart.y -= event.deltaY * 0.00025;
+					break;
+
+			}
+
+			_this.dispatchEvent(startEvent);
+			_this.dispatchEvent(endEvent);
+		}
+
+		function touchstart(event) {
+
+			if (_this.enabled === false) return;
+
+			switch (event.touches.length) {
+
+				case 1:
+					_state = STATE.TOUCH_ROTATE;
+					_moveCurr.copy(getMouseOnCircle(event.touches[0].pageX, event.touches[0].pageY));
+					_movePrev.copy(_moveCurr);
+					break;
+
+				default:
+					// 2 or more
+					_state = STATE.TOUCH_ZOOM_PAN;
+					var dx = event.touches[0].pageX - event.touches[1].pageX;
+					var dy = event.touches[0].pageY - event.touches[1].pageY;
+					_touchZoomDistanceEnd = _touchZoomDistanceStart = Math.sqrt(dx * dx + dy * dy);
+
+					var x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
+					var y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
+					_panStart.copy(getMouseOnScreen(x, y));
+					_panEnd.copy(_panStart);
+					break;
+
+			}
+
+			_this.dispatchEvent(startEvent);
+		}
+
+		function touchmove(event) {
+
+			if (_this.enabled === false) return;
+
+			event.preventDefault();
+			event.stopPropagation();
+
+			switch (event.touches.length) {
+
+				case 1:
+					_movePrev.copy(_moveCurr);
+					_moveCurr.copy(getMouseOnCircle(event.touches[0].pageX, event.touches[0].pageY));
+					break;
+
+				default:
+					// 2 or more
+					var dx = event.touches[0].pageX - event.touches[1].pageX;
+					var dy = event.touches[0].pageY - event.touches[1].pageY;
+					_touchZoomDistanceEnd = Math.sqrt(dx * dx + dy * dy);
+
+					var x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
+					var y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
+					_panEnd.copy(getMouseOnScreen(x, y));
+					break;
+
+			}
+		}
+
+		function touchend(event) {
+
+			if (_this.enabled === false) return;
+
+			switch (event.touches.length) {
+
+				case 0:
+					_state = STATE.NONE;
+					break;
+
+				case 1:
+					_state = STATE.TOUCH_ROTATE;
+					_moveCurr.copy(getMouseOnCircle(event.touches[0].pageX, event.touches[0].pageY));
+					_movePrev.copy(_moveCurr);
+					break;
+
+			}
+
+			_this.dispatchEvent(endEvent);
+		}
+
+		function contextmenu(event) {
+
+			if (_this.enabled === false) return;
+
+			event.preventDefault();
+		}
+
+		this.dispose = function () {
+
+			this.domElement.removeEventListener('contextmenu', contextmenu, false);
+			this.domElement.removeEventListener('mousedown', mousedown, false);
+			this.domElement.removeEventListener('wheel', mousewheel, false);
+
+			this.domElement.removeEventListener('touchstart', touchstart, false);
+			this.domElement.removeEventListener('touchend', touchend, false);
+			this.domElement.removeEventListener('touchmove', touchmove, false);
+
+			document.removeEventListener('mousemove', mousemove, false);
+			document.removeEventListener('mouseup', mouseup, false);
+
+			window.removeEventListener('keydown', keydown, false);
+			window.removeEventListener('keyup', keyup, false);
+		};
+
+		this.domElement.addEventListener('contextmenu', contextmenu, false);
+		this.domElement.addEventListener('mousedown', mousedown, false);
+		this.domElement.addEventListener('wheel', mousewheel, false);
+
+		this.domElement.addEventListener('touchstart', touchstart, false);
+		this.domElement.addEventListener('touchend', touchend, false);
+		this.domElement.addEventListener('touchmove', touchmove, false);
+
+		window.addEventListener('keydown', keydown, false);
+		window.addEventListener('keyup', keyup, false);
+
+		this.handleResize();
+
+		// force an update at start
+		this.update();
 	};
 
 	THREE.TrackballControls.prototype = Object.create(THREE.EventDispatcher.prototype);
@@ -4780,7 +4780,7 @@
 /* 15 */
 /***/ (function(module, exports) {
 
-	module.exports = "#define GLSLIFY 1\n//\n// Description : Array and textureless GLSL 2D simplex noise function.\n//      Author : Ian McEwan, Ashima Arts.\n//  Maintainer : ijm\n//     Lastmod : 20110822 (ijm)\n//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.\n//               Distributed under the MIT License. See LICENSE file.\n//               https://github.com/ashima/webgl-noise\n//\n\nvec3 mod289_2_0(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec2 mod289_2_0(vec2 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec3 permute_2_1(vec3 x) {\n  return mod289_2_0(((x*34.0)+1.0)*x);\n}\n\nfloat snoise_2_2(vec2 v)\n  {\n  const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0\n                      0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)\n                     -0.577350269189626,  // -1.0 + 2.0 * C.x\n                      0.024390243902439); // 1.0 / 41.0\n// First corner\n  vec2 i  = floor(v + dot(v, C.yy) );\n  vec2 x0 = v -   i + dot(i, C.xx);\n\n// Other corners\n  vec2 i1;\n  //i1.x = step( x0.y, x0.x ); // x0.x > x0.y ? 1.0 : 0.0\n  //i1.y = 1.0 - i1.x;\n  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\n  // x0 = x0 - 0.0 + 0.0 * C.xx ;\n  // x1 = x0 - i1 + 1.0 * C.xx ;\n  // x2 = x0 - 1.0 + 2.0 * C.xx ;\n  vec4 x12 = x0.xyxy + C.xxzz;\n  x12.xy -= i1;\n\n// Permutations\n  i = mod289_2_0(i); // Avoid truncation effects in permutation\n  vec3 p = permute_2_1( permute_2_1( i.y + vec3(0.0, i1.y, 1.0 ))\n    + i.x + vec3(0.0, i1.x, 1.0 ));\n\n  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);\n  m = m*m ;\n  m = m*m ;\n\n// Gradients: 41 points uniformly over a line, mapped onto a diamond.\n// The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)\n\n  vec3 x = 2.0 * fract(p * C.www) - 1.0;\n  vec3 h = abs(x) - 0.5;\n  vec3 ox = floor(x + 0.5);\n  vec3 a0 = x - ox;\n\n// Normalise gradients implicitly by scaling m\n// Approximation of: m *= inversesqrt( a0*a0 + h*h );\n  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );\n\n// Compute final noise value at P\n  vec3 g;\n  g.x  = a0.x  * x0.x  + h.x  * x0.y;\n  g.yz = a0.yz * x12.xz + h.yz * x12.yw;\n  return 130.0 * dot(m, g);\n}\n\n\n\n//\n// Description : Array and textureless GLSL 2D/3D/4D simplex\n//               noise functions.\n//      Author : Ian McEwan, Ashima Arts.\n//  Maintainer : ijm\n//     Lastmod : 20110822 (ijm)\n//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.\n//               Distributed under the MIT License. See LICENSE file.\n//               https://github.com/ashima/webgl-noise\n//\n\nvec3 mod289_1_3(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 mod289_1_3(vec4 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 permute_1_4(vec4 x) {\n     return mod289_1_3(((x*34.0)+1.0)*x);\n}\n\nvec4 taylorInvSqrt_1_5(vec4 r)\n{\n  return 1.79284291400159 - 0.85373472095314 * r;\n}\n\nfloat snoise_1_6(vec3 v)\n  {\n  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;\n  const vec4  D_1_7 = vec4(0.0, 0.5, 1.0, 2.0);\n\n// First corner\n  vec3 i  = floor(v + dot(v, C.yyy) );\n  vec3 x0 =   v - i + dot(i, C.xxx) ;\n\n// Other corners\n  vec3 g_1_8 = step(x0.yzx, x0.xyz);\n  vec3 l = 1.0 - g_1_8;\n  vec3 i1 = min( g_1_8.xyz, l.zxy );\n  vec3 i2 = max( g_1_8.xyz, l.zxy );\n\n  //   x0 = x0 - 0.0 + 0.0 * C.xxx;\n  //   x1 = x0 - i1  + 1.0 * C.xxx;\n  //   x2 = x0 - i2  + 2.0 * C.xxx;\n  //   x3 = x0 - 1.0 + 3.0 * C.xxx;\n  vec3 x1 = x0 - i1 + C.xxx;\n  vec3 x2 = x0 - i2 + C.yyy; // 2.0*C.x = 1/3 = C.y\n  vec3 x3 = x0 - D_1_7.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y\n\n// Permutations\n  i = mod289_1_3(i);\n  vec4 p = permute_1_4( permute_1_4( permute_1_4(\n             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))\n           + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))\n           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));\n\n// Gradients: 7x7 points over a square, mapped onto an octahedron.\n// The ring size 17*17 = 289 is close to a multiple of 49 (49*6 = 294)\n  float n_ = 0.142857142857; // 1.0/7.0\n  vec3  ns = n_ * D_1_7.wyz - D_1_7.xzx;\n\n  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);  //  mod(p,7*7)\n\n  vec4 x_ = floor(j * ns.z);\n  vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)\n\n  vec4 x = x_ *ns.x + ns.yyyy;\n  vec4 y = y_ *ns.x + ns.yyyy;\n  vec4 h = 1.0 - abs(x) - abs(y);\n\n  vec4 b0 = vec4( x.xy, y.xy );\n  vec4 b1 = vec4( x.zw, y.zw );\n\n  //vec4 s0 = vec4(lessThan(b0,0.0))*2.0 - 1.0;\n  //vec4 s1 = vec4(lessThan(b1,0.0))*2.0 - 1.0;\n  vec4 s0 = floor(b0)*2.0 + 1.0;\n  vec4 s1 = floor(b1)*2.0 + 1.0;\n  vec4 sh = -step(h, vec4(0.0));\n\n  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;\n  vec4 a1_1_9 = b1.xzyw + s1.xzyw*sh.zzww ;\n\n  vec3 p0_1_10 = vec3(a0.xy,h.x);\n  vec3 p1 = vec3(a0.zw,h.y);\n  vec3 p2 = vec3(a1_1_9.xy,h.z);\n  vec3 p3 = vec3(a1_1_9.zw,h.w);\n\n//Normalise gradients\n  vec4 norm = taylorInvSqrt_1_5(vec4(dot(p0_1_10,p0_1_10), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\n  p0_1_10 *= norm.x;\n  p1 *= norm.y;\n  p2 *= norm.z;\n  p3 *= norm.w;\n\n// Mix final noise value\n  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);\n  m = m * m;\n  return 42.0 * dot( m*m, vec4( dot(p0_1_10,x0), dot(p1,x1),\n                                dot(p2,x2), dot(p3,x3) ) );\n  }\n\n\n\n\nuniform vec2 resolution;\n\nuniform float time;\nuniform vec3 color;\nuniform float offset, darkness;\n\nuniform sampler2D textureGrid;\n\nvarying vec2 vUv;\n\nvoid main() {\n    vec2 uv = (vUv - vec2(0.5)) * vec2(offset);\n    vec3 col = mix(color, vec3(1.0 - darkness), dot(uv, uv));\n    // col = texture2D(textureGrid, vUv).rgb;\n    gl_FragColor = vec4(col, 1);\n}\n"
+	module.exports = "#define GLSLIFY 1\n//\n// Description : Array and textureless GLSL 2D simplex noise function.\n//      Author : Ian McEwan, Ashima Arts.\n//  Maintainer : ijm\n//     Lastmod : 20110822 (ijm)\n//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.\n//               Distributed under the MIT License. See LICENSE file.\n//               https://github.com/ashima/webgl-noise\n//\n\nvec3 mod289_1_0(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec2 mod289_1_0(vec2 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec3 permute_1_1(vec3 x) {\n  return mod289_1_0(((x*34.0)+1.0)*x);\n}\n\nfloat snoise_1_2(vec2 v)\n  {\n  const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0\n                      0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)\n                     -0.577350269189626,  // -1.0 + 2.0 * C.x\n                      0.024390243902439); // 1.0 / 41.0\n// First corner\n  vec2 i  = floor(v + dot(v, C.yy) );\n  vec2 x0 = v -   i + dot(i, C.xx);\n\n// Other corners\n  vec2 i1;\n  //i1.x = step( x0.y, x0.x ); // x0.x > x0.y ? 1.0 : 0.0\n  //i1.y = 1.0 - i1.x;\n  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\n  // x0 = x0 - 0.0 + 0.0 * C.xx ;\n  // x1 = x0 - i1 + 1.0 * C.xx ;\n  // x2 = x0 - 1.0 + 2.0 * C.xx ;\n  vec4 x12 = x0.xyxy + C.xxzz;\n  x12.xy -= i1;\n\n// Permutations\n  i = mod289_1_0(i); // Avoid truncation effects in permutation\n  vec3 p = permute_1_1( permute_1_1( i.y + vec3(0.0, i1.y, 1.0 ))\n    + i.x + vec3(0.0, i1.x, 1.0 ));\n\n  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);\n  m = m*m ;\n  m = m*m ;\n\n// Gradients: 41 points uniformly over a line, mapped onto a diamond.\n// The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)\n\n  vec3 x = 2.0 * fract(p * C.www) - 1.0;\n  vec3 h = abs(x) - 0.5;\n  vec3 ox = floor(x + 0.5);\n  vec3 a0 = x - ox;\n\n// Normalise gradients implicitly by scaling m\n// Approximation of: m *= inversesqrt( a0*a0 + h*h );\n  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );\n\n// Compute final noise value at P\n  vec3 g;\n  g.x  = a0.x  * x0.x  + h.x  * x0.y;\n  g.yz = a0.yz * x12.xz + h.yz * x12.yw;\n  return 130.0 * dot(m, g);\n}\n\n\n\n//\n// Description : Array and textureless GLSL 2D/3D/4D simplex\n//               noise functions.\n//      Author : Ian McEwan, Ashima Arts.\n//  Maintainer : ijm\n//     Lastmod : 20110822 (ijm)\n//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.\n//               Distributed under the MIT License. See LICENSE file.\n//               https://github.com/ashima/webgl-noise\n//\n\nvec3 mod289_2_3(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 mod289_2_3(vec4 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 permute_2_4(vec4 x) {\n     return mod289_2_3(((x*34.0)+1.0)*x);\n}\n\nvec4 taylorInvSqrt_2_5(vec4 r)\n{\n  return 1.79284291400159 - 0.85373472095314 * r;\n}\n\nfloat snoise_2_6(vec3 v)\n  {\n  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;\n  const vec4  D_2_7 = vec4(0.0, 0.5, 1.0, 2.0);\n\n// First corner\n  vec3 i  = floor(v + dot(v, C.yyy) );\n  vec3 x0 =   v - i + dot(i, C.xxx) ;\n\n// Other corners\n  vec3 g_2_8 = step(x0.yzx, x0.xyz);\n  vec3 l = 1.0 - g_2_8;\n  vec3 i1 = min( g_2_8.xyz, l.zxy );\n  vec3 i2 = max( g_2_8.xyz, l.zxy );\n\n  //   x0 = x0 - 0.0 + 0.0 * C.xxx;\n  //   x1 = x0 - i1  + 1.0 * C.xxx;\n  //   x2 = x0 - i2  + 2.0 * C.xxx;\n  //   x3 = x0 - 1.0 + 3.0 * C.xxx;\n  vec3 x1 = x0 - i1 + C.xxx;\n  vec3 x2 = x0 - i2 + C.yyy; // 2.0*C.x = 1/3 = C.y\n  vec3 x3 = x0 - D_2_7.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y\n\n// Permutations\n  i = mod289_2_3(i);\n  vec4 p = permute_2_4( permute_2_4( permute_2_4(\n             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))\n           + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))\n           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));\n\n// Gradients: 7x7 points over a square, mapped onto an octahedron.\n// The ring size 17*17 = 289 is close to a multiple of 49 (49*6 = 294)\n  float n_ = 0.142857142857; // 1.0/7.0\n  vec3  ns = n_ * D_2_7.wyz - D_2_7.xzx;\n\n  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);  //  mod(p,7*7)\n\n  vec4 x_ = floor(j * ns.z);\n  vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)\n\n  vec4 x = x_ *ns.x + ns.yyyy;\n  vec4 y = y_ *ns.x + ns.yyyy;\n  vec4 h = 1.0 - abs(x) - abs(y);\n\n  vec4 b0 = vec4( x.xy, y.xy );\n  vec4 b1 = vec4( x.zw, y.zw );\n\n  //vec4 s0 = vec4(lessThan(b0,0.0))*2.0 - 1.0;\n  //vec4 s1 = vec4(lessThan(b1,0.0))*2.0 - 1.0;\n  vec4 s0 = floor(b0)*2.0 + 1.0;\n  vec4 s1 = floor(b1)*2.0 + 1.0;\n  vec4 sh = -step(h, vec4(0.0));\n\n  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;\n  vec4 a1_2_9 = b1.xzyw + s1.xzyw*sh.zzww ;\n\n  vec3 p0_2_10 = vec3(a0.xy,h.x);\n  vec3 p1 = vec3(a0.zw,h.y);\n  vec3 p2 = vec3(a1_2_9.xy,h.z);\n  vec3 p3 = vec3(a1_2_9.zw,h.w);\n\n//Normalise gradients\n  vec4 norm = taylorInvSqrt_2_5(vec4(dot(p0_2_10,p0_2_10), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\n  p0_2_10 *= norm.x;\n  p1 *= norm.y;\n  p2 *= norm.z;\n  p3 *= norm.w;\n\n// Mix final noise value\n  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);\n  m = m * m;\n  return 42.0 * dot( m*m, vec4( dot(p0_2_10,x0), dot(p1,x1),\n                                dot(p2,x2), dot(p3,x3) ) );\n  }\n\n\n\n\nuniform vec2 resolution;\n\nuniform float time;\nuniform vec3 color;\nuniform float offset, darkness;\n\nuniform sampler2D textureGrid;\n\nvarying vec2 vUv;\n\nvoid main() {\n    vec2 uv = (vUv - vec2(0.5)) * vec2(offset);\n    vec3 col = mix(color, vec3(1.0 - darkness), dot(uv, uv));\n    // col = texture2D(textureGrid, vUv).rgb;\n    gl_FragColor = vec4(col, 1);\n}\n"
 
 /***/ }),
 /* 16 */

@@ -79,7 +79,7 @@ export default class Sketch extends THREE.EventDispatcher {
         // this.scene.add(helper);
 
         let shape = new Hypershape();
-        shape.scale.set(2, 2, 2);
+        shape.scale.set(2.5, 2.5, 2.5);
         this.updaters.push(shape);
         this.scene.add(shape);
 
