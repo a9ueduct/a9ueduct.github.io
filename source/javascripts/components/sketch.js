@@ -91,12 +91,14 @@ export default class Sketch extends THREE.EventDispatcher {
 
         // this.debugTexture(this.system.texturePosition);
 
+        /*
         const gui = new dat.GUI();
         gui.add(this.system.material.uniforms.displacement, "value").min(0.0).max(0.5).step(0.01).name("displacement");
         gui.add(this.system.material.uniforms.refractionRatio, "value").min(0.0).max(3.0).name("ratio");
         gui.add(this.system.material.uniforms.fresnelBias, "value").min(0.0).max(0.5).name("bias");
         gui.add(this.system.material.uniforms.fresnelPower, "value").min(0.0).max(3.0).name("power");
         gui.add(this.system.material.uniforms.fresnelScale, "value").min(0.0).max(3.0).name("scale");
+        */
     }
 
     debugTexture(texture, width = 10, height = 10) {
