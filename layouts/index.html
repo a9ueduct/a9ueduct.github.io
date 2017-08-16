@@ -1,0 +1,27 @@
+{{ partial "header.html" . }}
+    <canvas id="background"></canvas>
+	<main id="main" class="container">
+        <div class="logo">
+            <div class="logo-inner">
+            </div>
+        </div>
+        <div class="description">
+            <p></p>
+        </div>
+        <div class="member">
+            <h2></h2>
+            <ul>
+                <li v-for="member in members">
+                    <span v-text="member.name"></span>
+                    <div>
+                        <a v-bind:href="member.github" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
+                        <a v-if="member.twitter.length > 0" v-bind:href="member.twitter" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a v-if="member.personal.length > 0" v-bind:href="member.personal" target="_blank"><i class="fa fa-user" aria-hidden="true"></i></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </main>
+    <script src="{{ .Site.BaseURL }}javascripts/lib/three.min.js"></script>
+    <script src="{{ .Site.BaseURL }}javascripts/main.js"></script>
+{{ template "_internal/google_analytics.html" . }}

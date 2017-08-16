@@ -1,0 +1,7 @@
+baseurl = "https://a9ueduct.github.io/"
+languageCode = "en-us"
+title = "Aqueduct"
+theme = "blank"
+
+googleAnalytics = ""
+
