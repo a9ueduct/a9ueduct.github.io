@@ -13,8 +13,11 @@
 	{{ if .RSSLink -}}<link href="{{ .RSSLink }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}">{{- end }}
 	{{ .Hugo.Generator }}
 
+    <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
     <meta property="og:title" content="{{ .Title }}" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name"  content="{{ .Title }}" />
+    <meta property="og:description"  content="{{ .Site.Params.description }}" />
+    <meta property="og:image"  content="{{ .Site.BaseURL }}images/ogp.jpg" />
 </head>
 <body>

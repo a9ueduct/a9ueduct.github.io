@@ -5,3 +5,7 @@ theme = "blank"
 
 googleAnalytics = ""
 
+[params]
+    description = "Tokyo based visual performance unit"
+    author = "Aqueduct"
+
