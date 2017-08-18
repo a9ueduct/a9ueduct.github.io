@@ -13,8 +13,8 @@
 	{{ if .RSSLink -}}<link href="{{ .RSSLink }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}">{{- end }}
 	{{ .Hugo.Generator }}
 
-    <meta property="og:title" content="IndieVisualLab" />
+    <meta property="og:title" content="{{ .Title }}" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name"  content="IndieVisualLab" />
+    <meta property="og:site_name"  content="{{ .Title }}" />
 </head>
 <body>
